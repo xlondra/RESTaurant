@@ -18,7 +18,7 @@ To receive **plain text** instead, set the `Accept` header to `text/plain` in yo
 
 ---
 
-## Endpoints
+## Example Endpoints
 
 ### `GET /api/v1/persons`
 
