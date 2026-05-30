@@ -1,4 +1,5 @@
 <?php
+include_once(__DIR__ . "/../tokens/token.php");
 /**
  * THIS IS AN EXAMPLE FILE.
  */
@@ -13,6 +14,8 @@ class Example {
     }
 
     public static function getPersonPosts(int $userId, int $postId) : array {
+        Token::needsToken();
+
         return ['userId' => $userId, 'postId' => $postId, 'post' => [
             'title'   => "Welcome to the jungle!",
             'content' => "I like turtles!"
