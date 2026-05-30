@@ -74,6 +74,43 @@ Array
 
 ---
 
+## Authentication
+
+Some endpoints require a valid token. Pass it via a custom request header:
+
+```
+token: your_token_here
+```
+
+If the header is missing, the token doesn't exist, or it has expired, the API returns:
+
+```
+HTTP 401 Unauthorized
+```
+```json
+{"error": "Missing token!"}
+{"error": "Token does not exist!"}
+{"error": "Token has expired!"}
+```
+
+### Token Management
+
+Tokens are stored in `tokens/tokens.json`. Each token has a 90-day lifetime from the date of creation.
+
+```json
+{
+    "token": "trYkfIOniXN76505yVvSRh6RFUdiy0",
+    "creation_date": "2026-05-30",
+    "expiration_date": "2026-08-28"
+}
+```
+
+To issue a new token, call `Token::setToken()` from your PHP code.
+
+To protect an endpoint, call `Token::needsToken()` at the start of the handler, it will abort with a 401 if the request is not authenticated.
+
+---
+
 ## Unsupported Methods
 
 Only `GET` requests are currently accepted. Any other HTTP method returns:
