@@ -1,7 +1,8 @@
 <?php
-include_once("routes.php");
-include_once("backend/example.php");
-include_once("path.php");
+include_once(__DIR__ . "/routes.php");
+include_once(__DIR__ . "/../backend/example.php");
+include_once(__DIR__ . "/path.php");
+include_once(__DIR__ . "/method.php");
 
 class Handler {
     public static function getData(string $path) : string|bool {
@@ -12,7 +13,10 @@ class Handler {
             $path = Path::replace_integer_with_id($path);
         }
 
-        if (!array_key_exists($path, Router::$routes)) return false;
+        if (!array_key_exists($path, Router::$routes)) {
+            http_response_code(404);
+            return "Not found!";
+        }
 
         $handler = Router::$routes[$path];
 
@@ -27,12 +31,15 @@ class Handler {
      */
     private static function handle(array $handler, array $params = []) : bool|string {
         $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-        $data = call_user_func_array($handler, $params);
+        Method::enforceMethod($handler[0]);
+
+        $data = call_user_func_array(array_slice($handler, 1), $params);
 
         if (str_contains($accept, 'text/plain')) {
             header('Content-Type: text/plain');
             return print_r($data, true);
         }
+
 
         //JSON is currently the default
         header("Content-Type: application/json");

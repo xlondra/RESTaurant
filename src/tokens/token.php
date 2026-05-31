@@ -14,7 +14,7 @@ class Token {
         $array = json_decode(file_get_contents(__DIR__ . "/tokens.json"));
 
         for($i = 0; $i < count($array); $i++) {
-            if ($array[$i]->token == $token) {
+            if ($array[$i]->token === $token) {
                 $object = $array[$i];
                 if (strtotime($object->expiration_date) < time()) self::abort("Token has expired!");
                 
@@ -66,7 +66,7 @@ class Token {
      * @param string $message
      * @return never
      */
-    private static function abort(string $message) : void {
+    private static function abort(string $message) : never {
         http_response_code(401);
         die(json_encode(["error" => $message]));
     }
